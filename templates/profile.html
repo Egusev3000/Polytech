@@ -1,0 +1,50 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Личный кабинет Студента — Мосполитех</title>
+    <link rel="stylesheet" href="{% static 'main_app/css/style.css' %}">
+</head>
+<body>
+    {% include "includes/ticker.html" %}
+    {% include "includes/navbar.html" %}
+
+    <div style="max-width: 800px; margin: 40px auto; padding: 30px; border: 1px solid #e2e8f0; border-radius: 8px; background: #f8fafc;">
+        <h2 style="text-transform: uppercase; border-bottom: 2px solid #000; padding-bottom: 10px;">
+            🎓 Личный кабинет Великого Студента
+        </h2>
+        
+        <div style="margin-top: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            <!-- Блок личных данных -->
+            <div style="background: #fff; padding: 20px; border-radius: 6px; border: 1px solid #e2e8f0;">
+                <h3>Информация о профиле</h3>
+                <p><strong>Логин в ЕИОС:</strong> {{ user.username }}</p>
+                <p><strong>Электронная почта:</strong> {{ user.email }}</p>
+                <p><strong>Статус аккаунта:</strong> Активен во славу науки!</p>
+                <p><strong>Баланс ЕИОС:</strong> <span style="color: #047857; font-weight: bold;">{{ user.profile.balance }} ВПК</span></p>
+                <a href="/deposit/" style="display:inline-block; background:#ffcc00; color:#000; padding:5px 12px; text-decoration:none; border-radius:4px; font-weight:bold; font-size:13px; margin-top:5px;">Пополнить баланс картой</a>
+            </div>
+
+            <!-- Блок успеваемости и контракта -->
+            <div style="background: #fff; padding: 20px; border-radius: 6px; border: 1px solid #e2e8f0;">
+                <h3>Академический статус</h3>
+                <p><strong>Направление:</strong> Интеллектуальные беспилотные системы</p>
+                <p><strong>Форма обучения:</strong> Коммерческая (Контракт) ✅</p>
+                <p style="color: #047857; font-weight: bold;">Сертификат Минцифры: ВЕРИФИЦИРОВАН 🛑</p>
+            </div>
+        </div>
+
+        <!-- Развлекательный блок интеграции с казино -->
+        <div style="margin-top: 30px; background: #fff5f0; padding: 20px; border-radius: 6px; border: 1px solid #ff5500;">
+            <h3 style="color: #ff5500; margin-top: 0;">🎰 Связанные сервисы партнерской сети</h3>
+            <p>Ваша игровая активность в <strong>AzinoPolytech 777</strong> синхронизирована с единой зачетной книжкой.</p>
+            <a href="/casino/" style="display: inline-block; background: #ff5500; color: #fff; padding: 10px 20px; text-decoration: none; border-radius: 4px; font-weight: bold;">
+                Перейти к игровым слотам (НЕ ШТУРМ!)
+            </a>
+        </div>
+    </div>
+
+    {% include "includes/footer.html" %}
+</body>
+</html>

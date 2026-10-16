@@ -1,0 +1,274 @@
+/* main_app/static/main_app/css/casino.css */
+
+body.casino-body {
+    background: radial-gradient(circle, #1a0033 0%, #050010 100%);
+    color: #fff;
+    font-family: 'Impact', 'Arial Black', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.casino-navbar {
+    background-color: #000000;
+    border-bottom: 2px solid #ff00ff;
+    padding: 15px 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 0 15px #ff00ff;
+}
+.casino-navbar .logo a {
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 22px;
+    text-decoration: none;
+    letter-spacing: 1px;
+    text-shadow: 0 0 5px #00ffff;
+}
+.casino-navbar nav a {
+    color: #ffffff;
+    text-decoration: none;
+    margin-left: 20px;
+    font-size: 14px;
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+}
+
+.casino-layout {
+    max-width: 1300px;
+    margin: 40px auto;
+    padding: 0 20px;
+    display: flex;
+    gap: 30px;
+}
+.casino-main-content {
+    flex: 3;
+}
+
+.casino-wrapper {
+    background: rgba(20, 10, 35, 0.95);
+    border: 4px solid #ff00ff;
+    box-shadow: 0 0 30px #ff00ff, inset 0 0 15px #00ffff;
+    border-radius: 20px;
+    padding: 30px;
+    text-align: center;
+}
+
+.casino-logo {
+    font-size: 46px;
+    color: #fff;
+    text-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff, 0 0 40px #ff00ff;
+    letter-spacing: 2px;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+}
+
+.casino-sub {
+    font-family: Arial, sans-serif;
+    color: #00ffff;
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    margin-bottom: 30px;
+    text-shadow: 0 0 5px #00ffff;
+}
+
+/* ОБНОВЛЕННЫЙ ИГРОВОЙ ЭКРАН 5х3 */
+.slot-machine {
+    background: linear-gradient(180deg, #111 0%, #222 100%);
+    border: 8px solid #ffcc00;
+    box-shadow: 0 0 25px #ffcc00;
+    border-radius: 15px;
+    padding: 20px;
+    display: inline-block;
+    margin-bottom: 25px;
+}
+
+.reels-container {
+    display: grid;
+    grid-template-columns: repeat(5, 100px); /* 5 Барабанов */
+    grid-template-rows: repeat(3, 100px);    /* 3 Ряда */
+    background: #000000;
+    padding: 15px;
+    border-radius: 10px;
+    gap: 15px;
+    box-shadow: inset 0 0 40px rgba(0,255,255,0.6);
+    border: 3px solid #00ffff;
+}
+
+.reel-slot {
+    width: 100px;
+    height: 100px;
+    border-radius: 8px;
+    border: 2px solid #333;
+    background-color: #151525;
+    font-size: 20px;
+    line-height: 100px;
+    text-align: center;
+    font-weight: bold;
+    text-shadow: 0 0 10px currentColor;
+    transition: all 0.05s ease;
+}
+
+/* Неоновые стили элементов */
+.seven { color: #ff0055; border-color: #ff0055; }
+.cherry { color: #ff00aa; border-color: #ff00aa; }
+.lemon { color: #ffcc00; border-color: #ffcc00; }
+.diamond { color: #00ffff; border-color: #00ffff; }
+.polytech { color: #a855f7; border-color: #a855f7; }
+.bar { color: #22c55e; border-color: #22c55e; }
+
+/* ОБНОВЛЕННАЯ РЕАЛИСТИЧНАЯ ПАНЕЛЬ */
+.control-panel {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr 1fr;
+    align-items: center;
+    background: #0f081d;
+    padding: 20px;
+    border-radius: 10px;
+    border: 2px solid #00ffff;
+    margin-bottom: 25px;
+    gap: 15px;
+}
+
+.panel-section {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: center;
+}
+
+.stat-box {
+    font-family: monospace;
+    font-size: 18px;
+    color: #00ff00;
+    text-shadow: 0 0 5px #00ff00;
+}
+.stat-box span {
+    color: #fff;
+    font-size: 22px;
+}
+
+.bet-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.btn-bet {
+    background: #221545;
+    color: #00ffff;
+    border: 1px solid #00ffff;
+    padding: 5px 12px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 4px;
+    font-weight: bold;
+}
+.btn-bet:hover {
+    background: #00ffff;
+    color: #0;
+}
+
+.btn-spin {
+    background: linear-gradient(180deg, #ff0055 0%, #990022 100%);
+    color: #fff;
+    border: 2px solid #ff00ff;
+    padding: 15px 0;
+    width: 100%;
+    font-size: 26px;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0 0 15px #ff0055;
+    text-transform: uppercase;
+}
+.btn-spin:hover {
+    background: linear-gradient(180deg, #ff00aa 0%, #ff0055 100%);
+    box-shadow: 0 0 25px #ff00ff;
+}
+.btn-spin:disabled {
+    background: #444;
+    border-color: #666;
+    box-shadow: none;
+    cursor: not-allowed;
+}
+
+.slop-dog-container {
+    margin: 25px auto 0 auto;
+    background: rgba(0, 0, 0, 0.7);
+    border: 2px dashed #ffcc00;
+    padding: 15px;
+    border-radius: 10px;
+    max-width: 550px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+.slop-dog-img { width: 90px; height: 90px; border-radius: 8px; object-fit: cover; }
+.slop-dog-bubble { font-family: Arial, sans-serif; font-size: 14px; color: #ffcc00; text-align: left; line-height: 1.4; }
+.casino-footer-link { font-family: Arial, sans-serif; color: #666; text-decoration: underline; font-size: 14px; }
+.casino-footer-link:hover { color: #fff; }
+
+/* Анимация триумфа для игрового автомата */
+.win-flash {
+    animation: flash-purple-cyan 0.4s infinite alternate;
+}
+
+@keyframes flash-purple-cyan {
+    0% { border-color: #ff00ff; box-shadow: 0 0 40px #ff00ff; }
+    100% { border-color: #00ffff; box-shadow: 0 0 40px #00ffff; }
+}
+
+/* Безумный прыжок Нейрособаки при победе */
+.dog-jump {
+    animation: dog-bounce 0.5s infinite;
+}
+
+@keyframes dog-bounce {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-15px) scale(1.05); border-color: #00ff00; }
+}
+
+/* Подсветка победных ячеек */
+.winning-cell {
+    animation: pulse-glow 0.2s infinite alternate;
+    background-color: #220044 !important;
+}
+
+@keyframes pulse-glow {
+    0% { transform: scale(1); filter: brightness(1); }
+    100% { transform: scale(1.05); filter: brightness(1.8); }
+}
+
+/* Добавьте это в секцию панели управления в casino.css */
+.bet-controls {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn-bet {
+    background: #150a2e;
+    color: #00ffff;
+    border: 2px solid #00ffff;
+    padding: 6px 12px;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 6px;
+    font-weight: bold;
+    font-family: Arial, sans-serif;
+    transition: all 0.2s ease;
+}
+
+.btn-bet:hover {
+    background: rgba(0, 255, 255, 0.2);
+    box-shadow: 0 0 10px #00ffff;
+}
+
+/* Стиль для подсвеченной активной ставки */
+.btn-bet.active-bet {
+    background: #ff00ff;
+    color: #ffffff;
+    border-color: #ff00ff;
+    box-shadow: 0 0 12px #ff00ff;
+    text-shadow: 0 0 5px #fff;
+}

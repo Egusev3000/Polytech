@@ -1,0 +1,19 @@
+<header>
+    <div class="logo">
+        <a href="/">МОСКОВСКИЙ ПОЛИТЕХ — СЛАВА ЕМУ!!!</a>
+    </div>
+    <nav>
+        <a href="#">Абитуриентам</a>
+        <a href="#">Студентам</a>
+        <a href="#">Наука</a>
+
+        <!-- ДИНАМИЧЕСКИЙ БЛОК АВТОРИЗАЦИИ -->
+        {% if user.is_authenticated %}
+            <a href="/profile/" style="color: #ffcc00;">Личный кабинет ({{ user.username }})</a>
+            <a href="/logout/" style="color: #ff5555; font-size: 12px; margin-left: 10px;">Выйти</a>
+        {% else %}
+            <a href="/login/" style="border: 1px solid #ffcc00; padding: 5px 10px; border-radius: 4px;">Войти</a>
+            <a href="/register/" style="background: #ffcc00; color: #000; padding: 5px 10px; border-radius: 4px;">Регистрация</a>
+        {% endif %}
+    </nav>
+</header>

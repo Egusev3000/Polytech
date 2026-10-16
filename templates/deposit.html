@@ -1,0 +1,51 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Безопасная оплата Политеха — Шлюз ЕИОС</title>
+    <link rel="stylesheet" href="{% static 'main_app/css/style.css' %}">
+</head>
+<body>
+    {% include "includes/ticker.html" %}
+    {% include "includes/navbar.html" %}
+
+    <div style="max-width: 450px; margin: 50px auto; padding: 30px; border: 1px solid #e2e8f0; border-radius: 8px; background: #fff;">
+        <h2 style="margin-top:0; text-transform: uppercase;">💳 Пополнение баланса ВПК</h2>
+        <p style="font-size:13px; color:#666;">Платежный интернет-шлюз защищен сертификатами Минцифры. Списания с карты не производятся в рамках научно-игрового процесса!</p>
+
+        {% if success %}
+            <div style="background:#d4edda; color:#155724; padding:15px; border-radius:4px; font-weight:bold; text-align:center; margin: 20px 0;">
+                ✓ УСПЕШНО ЗАЧИСЛЕНО {{ amount }} ВПК! Слава Политеху!
+            </div>
+            <a href="/profile/" style="display:block; text-align:center; color:#1d4ed8;">Вернуться в Личный Кабинет</a>
+        {% else %}
+            <form method="post">
+                {% csrf_token %}
+                <div style="margin-bottom:15px;">
+                    <label style="display:block; margin-bottom:5px; font-weight:bold;">Сумма пополнения (ВПК):</label>
+                    <input type="number" name="amount" value="500" min="100" style="width:100%; padding:10px; border:1px solid #ccc; border-radius:4px; box-sizing:border-box;" required>
+                </div>
+
+                <div class="pay-card">
+                    <div style="font-size:12px; text-transform:uppercase; color:#94a3b8; margin-bottom:10px;">Номер карты</div>
+                    <input type="text" class="pay-input" placeholder="2200 1100 2200 3300" maxlength="19" required style="margin-bottom:15px;">
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px;">
+                        <div>
+                            <div style="font-size:12px; text-transform:uppercase; color:#94a3b8; margin-bottom:5px;">Срок действия</div>
+                            <input type="text" class="pay-input" placeholder="12/29" maxlength="5" required>
+                        </div>
+                        <div>
+                            <div style="font-size:12px; text-transform:uppercase; color:#94a3b8; margin-bottom:5px;">CVC / CVV</div>
+                            <input type="password" class="pay-input" placeholder="***" maxlength="3" required>
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" style="width:100%; background:#047857; color:#fff; border:none; padding:14px; font-size:16px; font-weight:bold; border-radius:6px; cursor:pointer; text-transform:uppercase;">Подтвердить платеж по СБП</button>
+            </form>
+        {% endif %}
+    </div>
+
+    {% include "includes/footer.html" %}
+</body>
+</html>

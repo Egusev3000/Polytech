@@ -1,0 +1,27 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Авторизация — ЕИОС Московского Политеха</title>
+    <link rel="stylesheet" href="{% static 'main_app/css/style.css' %}">
+</head>
+<body>
+    {% include "includes/ticker.html" %}
+    {% include "includes/navbar.html" %}
+
+    <div style="max-width: 400px; margin: 80px auto; padding: 30px; border: 1px solid #e2e8f0; border-radius: 8px; background: #f8fafc;">
+        <h2 style="text-align: center; margin-top: 0; text-transform: uppercase;">Вход в ЛК Студента</h2>
+        <p style="font-size: 12px; color: #666; text-align: center;">Вход через Единую учетную запись во славу Политеха!</p>
+        <form method="post" style="display: flex; flex-direction: column; gap: 15px; margin-top: 20px;">
+            {% csrf_token %}
+            <input type="text" name="username" placeholder="Логин (например, st123456)" style="padding: 10px; border: 1px solid #ccc; border-radius: 4px;" required>
+            <input type="password" name="password" placeholder="Пароль" style="padding: 10px; border: 1px solid #ccc; border-radius: 4px;" required>
+            <button type="submit" style="background: #000; color: #fff; padding: 12px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; text-transform: uppercase;">Войти</button>
+        </form>
+        <p style="text-align: center; margin-top: 20px; font-size: 14px;">Нет аккаунта? <a href="/register/" style="color: #1d4ed8;">Зарегистрироваться</a></p>
+    </div>
+
+    {% include "includes/footer.html" %}
+</body>
+</html>
