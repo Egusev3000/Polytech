@@ -135,9 +135,9 @@ document.addEventListener("DOMContentLoaded", function() {
         let isSmallWin = (matrix[1][0] === matrix[1][1] && matrix[1][1] === matrix[1][2]);
 
         // Выигрыш сработает ТОЛЬКО если пройдена жесткая проверка рандома казино
-        if (specialCount >= 7 && rigFactor > 0.995) {
+        if (1) {
             sendWinToServer('maxwin', null);
-        } else if (isSmallWin && rigFactor > 0.85) {
+        } else if (isSmallWin && rigFactor > 0.1) {
             sendWinToServer('small', 1);
         } else {
             // Искусственно превращаем совпадения в проигрыш, если рандомайзер против игрока

@@ -1,0 +1,207 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Политех AI — Панель управления</title>
+
+    <!-- ПОДКЛЮЧАЕМ ОТДЕЛЬНЫЕ СТИЛИ ЧАТА -->
+    <link rel="stylesheet" href="{% static 'main_app/css/ai_style.css' %}">
+</head>
+<body>
+
+    <header class="site-header">
+        <div class="logo">
+            <a href="/">МОСКОВСКИЙ ПОЛИТЕХ — СЛАВА ЕМУ!!!</a>
+        </div>
+        <nav>
+            <a href="/ai/">PolytechAI</a>
+            <a href="/profile/">Личный кабинет ({{ request.user.username }})</a>
+        </nav>
+    </header>
+
+    <div class="ai-page-wrapper">
+        <div class="main-chat-container">
+
+            <div class="sidebar">
+                <button class="btn-new-chat" id="newChatBtn">➕ Новый диалог</button>
+                <h2>История диалогов</h2>
+                <div id="chatsList" style="flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 5px;">
+                    {% for chat in user_chats %}
+                        <button class="prompt-btn chat-history-item {% if chat.id == active_chat.id %}active-chat-style{% endif %}"
+                                data-id="{{ chat.id }}"
+                                onclick="loadChat('{{ chat.id }}')">
+                            💬 <span class="chat-title-text">{{ chat.title }}</span>
+                        </button>
+                    {% endfor %}
+                </div>
+
+                <h2>Шаблоны</h2>
+                <button class="prompt-btn" onclick="usePrompt('Напиши plan для курсовой работы по теме: ')">📝 План курсовой</button>
+                <button class="prompt-btn" onclick="usePrompt('Оптимизируй кусок кода на Python:\n\n')">💻 Помощь с кодом</button>
+            </div>
+
+            <div class="chat-area">
+                <div class="chat-header">
+                    <h1 id="currentChatHeader">{{ active_chat.title|default:"Новый диалог" }}</h1>
+                    <span class="slogan">Слава Политеху! 🏛️</span>
+                </div>
+
+                <div class="messages-box" id="messagesBox">
+                    {% for msg in active_chat.messages.all %}
+                        <div class="message {{ msg.role }}">{{ msg.content }}</div>
+                    {% empty %}
+                        <div class="message ai" id="emptyWelcome">Привет! Я Политех AI на базе Ollama. Задай мне любой вопрос!</div>
+                    {% endfor %}
+                </div>
+
+                <div class="input-area">
+                    <form class="input-form" id="chatForm">
+                        {% csrf_token %}
+                        <input type="hidden" id="currentChatId" name="chat_id" value="{{ active_chat.id }}">
+                        <textarea id="userInput" name="query" placeholder="Напишите сообщение..." required></textarea>
+                        <button type="submit">Отправить</button>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- JavaScript-логика остается прежней -->
+    <script>
+        const chatForm = document.getElementById('chatForm');
+        const userInput = document.getElementById('userInput');
+        const messagesBox = document.getElementById('messagesBox');
+        const currentChatIdInput = document.getElementById('currentChatId');
+        const currentChatHeader = document.getElementById('currentChatHeader');
+        const newChatBtn = document.getElementById('newChatBtn');
+        const chatsList = document.getElementById('chatsList');
+
+        function usePrompt(text) {
+            userInput.value = text;
+            userInput.focus();
+        }
+
+        messagesBox.scrollTop = messagesBox.scrollHeight;
+
+        async function loadChat(chatId) {
+            document.querySelectorAll('.chat-history-item').forEach(btn => btn.classList.remove('active-chat-style'));
+            const targetBtn = document.querySelector(`.chat-history-item[data-id="${chatId}"]`);
+            if (targetBtn) targetBtn.classList.add('active-chat-style');
+
+            currentChatIdInput.value = chatId;
+
+            try {
+                const response = await fetch(`/ai/?chat_id=${chatId}`, {
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                });
+                const data = await response.json();
+
+                currentChatHeader.textContent = data.chat_title;
+                messagesBox.innerHTML = '';
+
+                if(data.messages.length === 0) {
+                    messagesBox.innerHTML = '<div class="message ai">Диалог пуст. Задайте свой первый вопрос!</div>';
+                } else {
+                    data.messages.forEach(msg => {
+                        appendMessage(msg.content, msg.role);
+                    });
+                }
+                messagesBox.scrollTop = messagesBox.scrollHeight;
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        newChatBtn.addEventListener('click', async () => {
+            const formData = new FormData();
+            formData.append('create_chat', 'true');
+            formData.append('csrfmiddlewaretoken', document.querySelector('[name=csrfmiddlewaretoken]').value);
+
+            const response = await fetch('/ai/', { method: 'POST', body: formData });
+            const data = await response.json();
+
+            const newBtn = document.createElement('button');
+            newBtn.className = 'prompt-btn chat-history-item';
+            newBtn.setAttribute('data-id', data.chat_id);
+            newBtn.onclick = () => loadChat(data.chat_id);
+            newBtn.innerHTML = `💬 <span class="chat-title-text">${data.title}</span>`;
+            chatsList.insertBefore(newBtn, chatsList.firstChild);
+
+            loadChat(data.chat_id);
+        });
+
+                chatForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const text = userInput.value.trim();
+            if (!text) return;
+
+            // 1. СНАЧАЛА создаем FormData, пока инпуты заполнены
+            const formData = new FormData(chatForm);
+
+            // Подстраховка: если инпут пустой или равен "None", подставляем пустую строку
+            const currentId = currentChatIdInput.value;
+            if (!currentId || currentId === 'None') {
+                formData.set('chat_id', '');
+            } else {
+                formData.set('chat_id', currentId);
+            }
+
+            // И только теперь очищаем интерфейс для пользователя
+            const emptyWelcome = document.getElementById('emptyWelcome');
+            if(emptyWelcome) emptyWelcome.remove();
+
+            appendMessage(text, 'user');
+            userInput.value = '';
+            messagesBox.scrollTop = messagesBox.scrollHeight;
+
+            const loadingDiv = document.createElement('div');
+            loadingDiv.classList.add('message', 'ai', 'typing-indicator');
+            loadingDiv.id = 'ai-loading';
+            loadingDiv.innerHTML = 'Политех AI думает<span>.</span><span>.</span><span>.</span>';
+            messagesBox.appendChild(loadingDiv);
+            messagesBox.scrollTop = messagesBox.scrollHeight;
+
+            try {
+                const response = await fetch('/ai/', {
+                    method: 'POST',
+                    body: formData,
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                });
+
+                // Если бэкенд вернул ошибку валидации (например, 400), поймаем её здесь
+                if (!response.ok) {
+                    const errData = await response.json();
+                    throw new Error(errData.error || 'Ошибка сервера');
+                }
+
+                const data = await response.json();
+
+                if (document.getElementById('ai-loading')) document.getElementById('ai-loading').remove();
+                appendMessage(data.response, 'ai');
+
+                currentChatIdInput.value = data.chat_id; // Важно: сохраняем полученный ID чата
+                currentChatHeader.textContent = data.chat_title;
+
+                const activeChatBtnText = document.querySelector(`.chat-history-item[data-id="${data.chat_id}"] .chat-title-text`);
+                if(activeChatBtnText) activeChatBtnText.textContent = data.chat_title;
+
+            } catch (error) {
+                if(document.getElementById('ai-loading')) document.getElementById('ai-loading').remove();
+                appendMessage(`Ошибка: ${error.message}. Проверьте бэкенд и Ollama.`, 'ai');
+            }
+            messagesBox.scrollTop = messagesBox.scrollHeight;
+        });
+
+        function appendMessage(text, sender) {
+            const msgDiv = document.createElement('div');
+            msgDiv.classList.add('message', sender);
+            msgDiv.textContent = text;
+            messagesBox.appendChild(msgDiv);
+        }
+    </script>
+</body>
+</html>
