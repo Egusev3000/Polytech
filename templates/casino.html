@@ -86,17 +86,13 @@
                     </div>
                 </div>
 
-                <!-- Обновите версию скрипта в самом низу, чтобы обойти кэш -->
-                <script src="{% static 'main_app/js/casino.js' %}?v=4"></script>
-
-
-                <!-- Обновите скрипты в самом низу перед </body> -->
+                <!-- Инициализируем CSRF-токен и стартовый баланс напрямую из контекста Django -->
                 <script>
                     const csrfToken = '{{ csrf_token }}';
-                    // Инициализируем стартовый баланс напрямую из контекста Django
                     let initialBalance = parseInt("{{ user.studentprofile.balance }}") || 1000;
                 </script>
-                <script src="{% static 'main_app/js/casino.js' %}"></script>
+                <!-- Обновите версию скрипта в самом низу, чтобы обойти кэш браузера -->
+                <script src="{% static 'main_app/js/casino.js' %}?v=4"></script>
 
 
                 <h2 id="casino-result" style="color: #ffcc00; font-size: 24px; min-height: 35px; margin-bottom: 20px;"></h2>
@@ -116,14 +112,6 @@
 
     {% include "includes/footer.html" %}
 
-    <!-- Передаем CSRF-токен и Баланс из Django в JS -->
-    <script>
-        const csrfToken = '{{ csrf_token }}';
-        let initialBalance = parseInt("{{ user.studentprofile.balance }}") || 1000;
-    </script>
-
-    <!-- ТРЮК С ВЕРСИЕЙ: Добавляем ?v=2, чтобы обойти любой кэш браузера! -->
-    <script src="{% static 'main_app/js/casino.js' %}?v=2"></script>
 </body>
 </html>
 
