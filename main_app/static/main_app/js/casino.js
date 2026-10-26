@@ -125,20 +125,28 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         }
 
-        let specialCount = 0;
+        let winningRow = null;
         for(let r=0; r<3; r++) {
-            for(let c=0; c<5; c++) {
-                if(matrix[r][c] === 'seven') specialCount++;
+            if (matrix[r][0] === matrix[r][1] && matrix[r][1] === matrix[r][2]) {
+                winningRow = r;
+                break;
             }
         }
 
-        let isSmallWin = (matrix[1][0] === matrix[1][1] && matrix[1][1] === matrix[1][2]);
+        let winType = null;
+        if (winningRow !== null) {
+            if (matrix[winningRow][0] === 'seven') {
+                // Джекпот: три семерки подряд (×20 к ставке)
+                winType = 'maxwin';
+            } else if (rigFactor > 0.1) {
+                // Утешительный мелкий выигрыш (х0.5)
+                winType = 'small';
+            }
+        }
 
-        // Выигрыш сработает ТОЛЬКО если пройдена жесткая проверка рандома казино
-        if (1) {
-            sendWinToServer('maxwin', null);
-        } else if (isSmallWin && rigFactor > 0.1) {
-            sendWinToServer('small', 1);
+        // Выигрыш сработает ТОЛЬКО при найденной совпадающей строке и пройденной проверке рандома казино
+        if (winType !== null) {
+            sendWinToServer(winType, winningRow);
         } else {
             // Искусственно превращаем совпадения в проигрыш, если рандомайзер против игрока
             document.getElementById('casino-result').innerText = "Ряд не совпал. Повезет на пересдаче! 🔥";

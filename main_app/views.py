@@ -57,14 +57,22 @@ def logout_view(request):
 @login_required(login_url='/login/')
 def casino_action_view(request):
     if request.method == 'POST':
-        data = json.loads(request.body)
+        try:
+            data = json.loads(request.body)
+        except json.JSONDecodeError:
+            return JsonResponse({'success': False, 'error': 'Неверный формат запроса!'}, status=400)
         action = data.get('action')
         profile = request.user.profile
 
-        if action == 'spin':
-            bet = int(data.get('bet', 50))
+        if action in ('spin', 'win'):
+            try:
+                bet = int(data.get('bet') or 50)
+            except (ValueError, TypeError):
+                return JsonResponse({'success': False, 'error': 'Неверная ставка!'}, status=400)
             if bet < 1:
                 return JsonResponse({'success': False, 'error': 'Минимальная ставка — 1 ВПК!'})
+
+        if action == 'spin':
             if profile.balance < bet:
                 return JsonResponse({'success': False, 'error': 'Недостаточно ВПК!'})
 
@@ -74,13 +82,12 @@ def casino_action_view(request):
 
         elif action == 'win':
             win_type = data.get('type', 'small')
-            bet = int(data.get('bet', 50))
 
             # ЖЕСТКАЯ МАТЕМАТИКА: мелкий выигрыш возвращает лишь х0.5 (чистый убыток!)
             if win_type == 'maxwin':
                 prize = bet * 20
             else:
-                prize = int(bet * 10)
+                prize = int(bet * 0.5)
 
             profile.balance += prize
             profile.save()
