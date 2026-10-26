@@ -11,4 +11,6 @@ urlpatterns = [
     path('profile/', views.profile_view, name='profile'),
     path('logout/', views.logout_view, name='logout'),
     path('ai/', views.polytech_ai_view, name='polytech_ai'),
+    path('roulette/', views.roulette_view, name='roulette'),
+    path('appraisal/', views.appraisal_view, name='appraisal'),
 ]

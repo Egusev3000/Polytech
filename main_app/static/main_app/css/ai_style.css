@@ -254,3 +254,62 @@ button[type="submit"] {
     20% { opacity: 1; }
     100% { opacity: .2; }
 }
+
+/* Карточка Аппгрейдера оценки */
+.appraisal-card {
+    width: min(800px, 90vw);
+    background-color: #1a1a1e;
+    border: 1px solid #29292e;
+    border-radius: 16px;
+    padding: 40px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+}
+
+.appraisal-title {
+    font-size: 28px;
+    margin-bottom: 10px;
+    background: linear-gradient(45deg, #00b4db, #0083b0);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.appraisal-sub {
+    color: #6c6c7d;
+    font-size: 14px;
+    margin-bottom: 25px;
+}
+
+.appraisal-card textarea {
+    width: 100%;
+    min-height: 200px;
+    background-color: #202024;
+    border: 1px solid #29292e;
+    border-radius: 8px;
+    color: #ffffff;
+    font-size: 15px;
+    resize: vertical;
+    outline: none;
+}
+
+.appraisal-card textarea:focus {
+    border-color: #00b4db;
+}
+
+.appraisal-card button[type="submit"] {
+    margin-top: 15px;
+    width: 100%;
+    padding: 14px;
+}
+
+.appraisal-result {
+    margin-top: 25px;
+}
+
+.appraisal-grade {
+    font-size: 64px;
+    font-weight: bold;
+    color: #ffcc00;
+    text-shadow: 0 0 20px rgba(255, 204, 0, 0.6);
+    margin-bottom: 15px;
+}

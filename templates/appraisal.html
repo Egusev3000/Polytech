@@ -1,0 +1,76 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧪 Аппгрейдер оценки — Политех AI</title>
+    <link rel="stylesheet" href="{% static 'main_app/css/ai_style.css' %}">
+</head>
+<body>
+    {% include "includes/ticker.html" %}
+    {% include "includes/navbar.html" %}
+
+    <div class="ai-page-wrapper">
+        <div class="main-chat-container">
+            <div class="chat-area" style="align-items: center; justify-content: center; padding: 40px;">
+                <div class="appraisal-card">
+                    <h1 class="appraisal-title">🧪 Аппгрейдер оценки</h1>
+                    <p class="appraisal-sub">Отправь код — Политех AI выдаст тебе оценку качества!</p>
+                    <form id="appraisalForm">
+                        <textarea id="appraisalCode" placeholder="Вставь сюда код..."></textarea>
+                        <button type="submit" id="appraisalBtn">Оценить код</button>
+                    </form>
+                    <div id="appraisalResult" class="appraisal-result">
+                        <div class="appraisal-grade" id="appraisalGrade">—</div>
+                        <div class="message ai" id="appraisalFeedback">Оценка появится здесь...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% include "includes/footer.html" %}
+
+    <script>
+        const appraisalForm = document.getElementById('appraisalForm');
+        const appraisalCode = document.getElementById('appraisalCode');
+        const appraisalBtn = document.getElementById('appraisalBtn');
+        const appraisalResult = document.getElementById('appraisalResult');
+        const appraisalGrade = document.getElementById('appraisalGrade');
+        const appraisalFeedback = document.getElementById('appraisalFeedback');
+
+        appraisalForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const code = appraisalCode.value.trim();
+            if (!code) return;
+
+            appraisalBtn.disabled = true;
+            appraisalBtn.innerText = 'Оцениваю...';
+            appraisalResult.innerHTML = '<div class="message ai">Аппгрейдер оценивает<span class="typing-indicator"><span>.</span><span>.</span><span>.</span></span></div>';
+
+            const formData = new FormData();
+            formData.append('code', code);
+
+            try {
+                const response = await fetch('/appraisal/', {
+                    method: 'POST',
+                    body: formData,
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                });
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.error || 'Ошибка сервера');
+
+                const gradeEl = document.getElementById('appraisalGrade');
+                gradeEl.innerHTML = data.grade ? `${data.grade}/10` : '—';
+                appraisalFeedback.textContent = data.response;
+            } catch (error) {
+                appraisalResult.innerHTML = `<div class="message ai">Ошибка: ${error.message}. Проверьте бэкенд и Ollama.</div>`;
+            } finally {
+                appraisalBtn.disabled = false;
+                appraisalBtn.innerText = 'Оценить код';
+            }
+        });
+    </script>
+</body>
+</html>

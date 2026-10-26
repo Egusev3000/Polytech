@@ -1,0 +1,55 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎡 КОЛЕСО ФОРТУНЫ — МОСКОВСКИЙ ПОЛИТЕХ</title>
+    <link rel="stylesheet" href="{% static 'main_app/css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'main_app/css/casino.css' %}">
+    <link rel="stylesheet" href="{% static 'main_app/css/roulette.css' %}">
+</head>
+<body class="casino-body">
+
+    {% include "includes/ticker.html" %}
+
+    <header class="casino-navbar">
+        <div class="logo">
+            <a href="/">🎡 AZINO-POLYTECH 777</a>
+        </div>
+        <nav>
+            <a href="/casino/">Слоты</a>
+            <a href="/roulette/">Колесо Фортуны</a>
+            <a href="/profile/" style="color: #00ffff;">Личный кабинет ({{ user.username }})</a>
+            <a href="/deposit/" style="color: #ffcc00;">Пополнить баланс</a>
+            <a href="/logout/" style="color: #ff5555; margin-left: 15px;">Выйти из ЕИОС</a>
+        </nav>
+    </header>
+
+    <div class="casino-layout">
+        <div class="casino-main-content">
+            <div class="casino-wrapper">
+                <h1 class="casino-logo">🎡 КОЛЕСО ФОРТУНЫ</h1>
+                <div class="roulette-wheel-stage">
+                    <div class="roulette-pointer"></div>
+                    <div class="roulette-wheel" id="rouletteWheel"></div>
+                    <div class="roulette-hub">POLY</div>
+                </div>
+                <div id="rouletteResult" class="roulette-result">Жду руки судьбы...</div>
+                <button class="btn-spin" id="rouletteSpinBtn">XУДАТЬ НА КОЛЕСЕ</button>
+                <div class="slop-dog-container">
+                    <img src="{% static 'main_app/images/slop_dog.jpg' %}" alt="Slop Dog" class="slop-dog-img" id="dog-img">
+                    <div class="slop-dog-bubble">
+                        <strong>Нейрослоп Собака (Slop Dog):</strong><br>
+                        <span id="dog-text">Колесо фортуны генерирует величие само по себе. Жми на кнопку и верь в судьбу!</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% include "includes/footer.html" %}
+
+    <script src="{% static 'main_app/js/roulette.js' %}"></script>
+</body>
+</html>
