@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from .models import AIChat, AIMessage
 from django.http import JsonResponse
 import json
+import re
 import ollama
 
 
@@ -186,3 +187,36 @@ def polytech_ai_view(request):
         "user_chats": user_chats,
         "active_chat": active_chat,
     })
+
+
+@login_required(login_url='/login/')
+def roulette_view(request):
+    return render(request, 'roulette.html')
+
+
+@login_required(login_url='/login/')
+def appraisal_view(request):
+    if request.method == "POST" and request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        code = request.POST.get("code", "").strip()
+        if not code:
+            return JsonResponse({"error": "Отправьте код для оценки"}, status=400)
+
+        try:
+            ollama_context = [
+                {
+                    'role': 'system',
+                    'content': 'Ты — Аппгрейдер оценки кода. Оценивай качество кода студента Московского политехнического университета. Оценивай читаемость, корректность и эффективность. Ответь строго в формате: "Оценка: X/10", где X — целое число от 1 до 10, затем краткий разбор.',
+                },
+                {'role': 'user', 'content': f'Оцени следующий фрагмент кода:\n\n{code}'},
+            ]
+            response = ollama.chat(model='qwen2.5-coder:7b', messages=ollama_context)
+            ai_response = response['message']['content']
+
+            grade_match = re.search(r'(\d{1,2})\s*(?:/|:)\s*10', ai_response)
+            grade = int(grade_match.group(1)) if grade_match else None
+
+            return JsonResponse({"grade": grade, "response": ai_response})
+        except Exception as e:
+            return JsonResponse({"error": f"Ошибка Ollama: {str(e)}. Проверьте терминал."}, status=500)
+
+    return render(request, 'appraisal.html')

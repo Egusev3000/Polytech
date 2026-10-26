@@ -84,3 +84,56 @@ class PolytechAITests(TestCase):
         self.assertEqual(self.chat.title, 'Привет, Политех!')
         self.assertEqual(AIMessage.objects.filter(chat=self.chat, role='user').count(), 1)
         self.assertEqual(AIMessage.objects.filter(chat=self.chat, role='ai').count(), 1)
+
+
+class RouletteTests(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='roulette', password='testpass123')
+        self.client.force_login(self.user)
+
+    def test_roulette_page_loads(self):
+        response = self.client.get('/roulette/')
+        self.assertEqual(response.status_code, 200)
+
+
+class AppraisalTests(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='appraisal', password='testpass123')
+        self.client.force_login(self.user)
+
+    def test_appraisal_page_loads(self):
+        response = self.client.get('/appraisal/')
+        self.assertEqual(response.status_code, 200)
+
+    @patch('main_app.views.ollama.chat')
+    def test_appraisal_returns_grade(self, mock_chat):
+        mock_chat.return_value = {'message': {'content': 'Оценка: 8/10\nХороший код, но можно улучшить.'}}
+
+        response = self.client.post(
+            '/appraisal/',
+            data={'code': 'print("hello")'},
+            **{'HTTP_X_REQUESTED_WITH': 'XMLHttpRequest'},
+        )
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content)
+        self.assertEqual(data['grade'], 8)
+        self.assertIn('Оценка', data['response'])
+
+    def test_appraisal_empty_code(self):
+        response = self.client.post(
+            '/appraisal/',
+            data={'code': '   '},
+            content_type='application/json',
+            **{'HTTP_X_REQUESTED_WITH': 'XMLHttpRequest'},
+        )
+        self.assertEqual(response.status_code, 400)
+
+    def test_appraisal_requires_login(self):
+        self.client.logout()
+        response = self.client.post(
+            '/appraisal/',
+            data={'code': 'x'},
+            content_type='application/json',
+            **{'HTTP_X_REQUESTED_WITH': 'XMLHttpRequest'},
+        )
+        self.assertEqual(response.status_code, 302)

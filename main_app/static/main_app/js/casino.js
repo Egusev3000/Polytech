@@ -50,6 +50,9 @@ document.addEventListener("DOMContentLoaded", function() {
             return;
         }
 
+        const winBanner = document.getElementById('winBanner');
+        if (winBanner) winBanner.classList.remove('visible');
+
         slotWrapper.classList.remove('win-flash');
         dogContainer.classList.remove('dog-jump');
 
@@ -191,6 +194,17 @@ document.addEventListener("DOMContentLoaded", function() {
                     if (cell) cell.classList.add('winning-cell');
                 }
             }
+
+            const winBanner = document.getElementById('winBanner');
+            if (winBanner) {
+                winBanner.innerHTML = type === 'maxwin'
+                    ? `<div>⚡ МАКС ВИН (х20)!!! +${data.prize} ВПК!!! ⚡</div>`
+                    : `<div>УТЕШИТЕЛЬНЫЙ ПРИЗ: +${data.prize} ВПК (х0.5)</div>`;
+                winBanner.classList.add('visible');
+                if (winBanner._hideTimer) clearTimeout(winBanner._hideTimer);
+                winBanner._hideTimer = setTimeout(() => winBanner.classList.remove('visible'), 6000);
+            }
+
             spinBtn.disabled = false;
             betInput.disabled = false;
         });
